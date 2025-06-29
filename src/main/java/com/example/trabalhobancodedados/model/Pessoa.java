@@ -1,8 +1,8 @@
 package com.example.trabalhobancodedados.model;
 
 import lombok.*;
-import java.sql.Date;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @Entity
 public class Pessoa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,12 +18,12 @@ public class Pessoa {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String cpf;
 
     @Column(nullable = false)
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 }
