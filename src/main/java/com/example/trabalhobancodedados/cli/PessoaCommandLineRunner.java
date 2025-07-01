@@ -26,6 +26,7 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
             System.out.println("2 - Listar pessoas");
             System.out.println("3 - Atualizar pessoa");
             System.out.println("4 - Deletar pessoa");
+            System.out.println("5 - Buscar pessoa por ID");
             System.out.println("0 - Sair");
             System.out.print("Opcao: ");
             String opcao = scanner.nextLine();
@@ -63,6 +64,11 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
                 case "4":
                     System.out.print("ID da pessoa: ");
                     service.deletarPessoa(Long.parseLong(scanner.nextLine()));
+                    break;
+                case "5":
+                    System.out.print("ID da pessoa: ");
+                    service.buscarPorId(Long.parseLong(scanner.nextLine()))
+                        .ifPresentOrElse(System.out::println, () -> System.out.println("Pessoa nao encontrada"));
                     break;
                 case "0":
                     return;

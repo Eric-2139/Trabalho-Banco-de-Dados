@@ -7,27 +7,35 @@ import org.springframework.stereotype.Service;
 
 import com.example.trabalhobancodedados.model.Pessoa;
 import com.example.trabalhobancodedados.repository.postgresql.PessoaRepository;
+import com.example.trabalhobancodedados.service.LoggingService;
 
 @Service
 public class PessoaService {
     
-
     private final PessoaRepository repository;
+    private final LoggingService loggingService;
 
-    public PessoaService(PessoaRepository repository) {
+    public PessoaService(PessoaRepository repository, LoggingService loggingService) {
         this.repository = repository;
+        this.loggingService = loggingService;
     }
 
     public Pessoa criarPessoa(Pessoa pessoa) {
-        return repository.save(pessoa);
+        Pessoa criada = repository.save(pessoa);
+        loggingService.info("Pessoa criada: " + criada.getId());
+        return criada;
     }
 
     public List<Pessoa> listarPessoas() {
-        return repository.findAll();
+        List<Pessoa> pessoas = repository.findAll();
+        loggingService.info("Listagem de pessoas consultada");
+        return pessoas;
     }
 
     public Optional<Pessoa> buscarPorId(Long id) {
-        return repository.findById(id);
+        Optional<Pessoa> pessoa = repository.findById(id);
+        loggingService.info("Busca de pessoa por id: " + id);
+        return pessoa;
     }
 
     public Pessoa atualizarPessoa(Long id, Pessoa dados) {
@@ -39,10 +47,13 @@ public class PessoaService {
         existente.setCpf(dados.getCpf());
         existente.setDataNascimento(dados.getDataNascimento());
 
-        return repository.save(existente);
+        Pessoa atualizada = repository.save(existente);
+        loggingService.info("Pessoa atualizada: " + id);
+        return atualizada;
     }
 
     public void deletarPessoa(Long id) {
         repository.deleteById(id);
+        loggingService.info("Pessoa deletada: " + id);
     }
 }
