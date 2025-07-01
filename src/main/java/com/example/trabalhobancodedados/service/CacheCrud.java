@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 import com.example.trabalhobancodedados.repository.postgresql.PessoaRepository;
 import org.springframework.stereotype.Service;
 import com.example.trabalhobancodedados.model.Pessoa;
-import com.example.trabalhobancodedados.repository.postgresql.PessoaRepository;
 import lombok.*;
 
 @Service
@@ -24,10 +23,11 @@ public class CacheCrud {
         }
 
         // 2. Busca no banco de dados se não achar no Redis
-        pessoaModel = pessoaRepository.findByCpf(cpf)
-                .orElseThrow(() -> new RuntimeException("PessoaModel não encontrada!"));
-        // 3. Salva no Redis (via cacheServiceService)
-        cacheServiceService.salvarPessoa(pessoaModel, 1, TimeUnit.HOURS);
+       pessoaModel = pessoaRepository.findByCpf(cpf);
+        if (pessoaModel != null) {
+            // 3. Salva no Redis (via cacheServiceService)
+            cacheServiceService.salvarPessoa(pessoaModel, 1, TimeUnit.HOURS);
+        }
         return pessoaModel;
     }
 

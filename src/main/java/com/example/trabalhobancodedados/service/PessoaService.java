@@ -7,21 +7,21 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 import com.example.trabalhobancodedados.model.Pessoa;
-import com.example.trabalhobancodedados.model.Cache;
 import com.example.trabalhobancodedados.repository.postgresql.PessoaRepository;
 import com.example.trabalhobancodedados.repository.redis.CacheRepository;
+import com.example.trabalhobancodedados.service.CacheCrud;
 
 @Service
 public class PessoaService {
 
     private final PessoaRepository repository;
-    private final CacheRepository cacheRepository;
     private final LoggingService loggingService;
+    private final CacheCrud cacheCrud;
 
-    public PessoaService(PessoaRepository repository, CacheRepository cacheRepository, LoggingService loggingService) {
+     public PessoaService(PessoaRepository repository, LoggingService loggingService, CacheCrud cacheCrud) {
         this.repository = repository;
-        this.cacheRepository = cacheRepository;
         this.loggingService = loggingService;
+        this.cacheCrud = cacheCrud;
     }
 
     public Pessoa criarPessoa(Pessoa pessoa) {
@@ -43,30 +43,8 @@ public class PessoaService {
     }
 
     public Optional<Pessoa> buscarPorCpf(String cpf) {
-        Optional<Cache> fromCache = cacheRepository.findById(cpf);
-        if (fromCache.isPresent()) {
-            Cache cache = fromCache.get();
-            loggingService.info("Busca de pessoa por cpf no cache: " + cpf);
-            Pessoa pessoa = new Pessoa();
-            pessoa.setNome(cache.getName());
-            pessoa.setEmail(cache.getEmail());
-            pessoa.setCpf(cache.getCpf());
-            pessoa.setDataNascimento(LocalDate.parse(cache.getDataNascimento()));
-            return Optional.of(pessoa);
-        }
-
-        Pessoa pessoa = repository.findByCpf(cpf);
-        loggingService.info("Busca de pessoa por cpf no banco: " + cpf);
-        if (pessoa != null) {
-            Cache cache = Cache.builder()
-                    .id(cpf)
-                    .name(pessoa.getNome())
-                    .email(pessoa.getEmail())
-                    .cpf(pessoa.getCpf())
-                    .dataNascimento(pessoa.getDataNascimento().toString())
-                    .build();
-            cacheRepository.save(cache);
-        }
+        loggingService.info("Busca de pessoa por cpf: " + cpf);
+        Pessoa pessoa = cacheCrud.buscarPorCpf(cpf);
         return Optional.ofNullable(pessoa);
     }
 
