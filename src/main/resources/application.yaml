@@ -14,3 +14,8 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://Eric2139:eric2005@eric2139.nuv9uun.mongodb.net/Projeto-James
+    
+    redis:
+      host: redis-14755.c256.us-east-1-2.ec2.redns.redis-cloud.com
+      port: 14755
+      password: lZyGv6BqAobNZe1cKKCVLc7n23yl4bVr

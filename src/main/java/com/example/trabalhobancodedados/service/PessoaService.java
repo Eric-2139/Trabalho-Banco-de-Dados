@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.trabalhobancodedados.model.Pessoa;
 import com.example.trabalhobancodedados.repository.postgresql.PessoaRepository;
-import com.example.trabalhobancodedados.service.LoggingService;
+// import com.example.trabalhobancodedados.service.LoggingService;
 
 @Service
 public class PessoaService {
