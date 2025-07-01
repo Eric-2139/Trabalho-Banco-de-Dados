@@ -19,3 +19,9 @@ spring:
       host: redis-14755.c256.us-east-1-2.ec2.redns.redis-cloud.com
       port: 14755
       password: lZyGv6BqAobNZe1cKKCVLc7n23yl4bVr
+
+  neo4j:
+    authentication:
+      password: itM7tQsUFe517cGHYMx3dnGEwbsGfzdCnv6nY9JcC-k
+      username: neo4j
+    uri: neo4j+s://b5790795.databases.neo4j.io

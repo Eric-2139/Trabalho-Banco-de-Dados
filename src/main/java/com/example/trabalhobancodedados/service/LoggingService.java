@@ -1,6 +1,7 @@
 package com.example.trabalhobancodedados.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,5 +22,9 @@ public class LoggingService {
     public void info(String message) {
         LOGGER.info(message);
         logRepository.save(new Log(null, "INFO", message, LocalDateTime.now()));
+    }
+
+    public List<Log> getLogs() {
+        return logRepository.findAll();
     }
 }

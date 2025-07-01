@@ -8,14 +8,17 @@ import org.springframework.stereotype.Component;
 
 import com.example.trabalhobancodedados.model.Pessoa;
 import com.example.trabalhobancodedados.service.PessoaService;
+import com.example.trabalhobancodedados.service.LoggingService;
 
 @Component
 public class PessoaCommandLineRunner implements CommandLineRunner {
 
     private final PessoaService service;
+    private final LoggingService loggingService;
 
-    public PessoaCommandLineRunner(PessoaService service) {
+    public PessoaCommandLineRunner(PessoaService service, LoggingService loggingService) {
         this.service = service;
+        this.loggingService = loggingService;
     }
 
     @Override
@@ -27,6 +30,8 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
             System.out.println("3 - Atualizar pessoa");
             System.out.println("4 - Deletar pessoa");
             System.out.println("5 - Buscar pessoa por ID");
+            System.out.println("6 - Buscar pessoa por CPF (cache)");
+            System.out.println("7 - Mostrar logs");
             System.out.println("0 - Sair");
             System.out.print("Opcao: ");
             String opcao = scanner.nextLine();
@@ -69,6 +74,14 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
                     System.out.print("ID da pessoa: ");
                     service.buscarPorId(Long.parseLong(scanner.nextLine()))
                         .ifPresentOrElse(System.out::println, () -> System.out.println("Pessoa nao encontrada"));
+                    break;
+                    case "6":
+                    System.out.print("CPF: ");
+                    service.buscarPorCpf(scanner.nextLine())
+                        .ifPresentOrElse(System.out::println, () -> System.out.println("Pessoa nao encontrada"));
+                    break;
+                case "7":
+                    loggingService.getLogs().forEach(System.out::println);
                     break;
                 case "0":
                     return;

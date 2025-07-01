@@ -3,11 +3,11 @@ package com.example.trabalhobancodedados.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.trabalhobancodedados.model.Pessoa;
 import com.example.trabalhobancodedados.repository.postgresql.PessoaRepository;
-// import com.example.trabalhobancodedados.service.LoggingService;
 
 @Service
 public class PessoaService {
@@ -36,6 +36,13 @@ public class PessoaService {
         Optional<Pessoa> pessoa = repository.findById(id);
         loggingService.info("Busca de pessoa por id: " + id);
         return pessoa;
+    }
+
+    @Cacheable(value = "pessoas", key = "#cpf")
+    public Optional<Pessoa> buscarPorCpf(String cpf) {
+        Pessoa pessoa = repository.findByCpf(cpf);
+        loggingService.info("Busca de pessoa por cpf: " + cpf);
+        return Optional.ofNullable(pessoa);
     }
 
     public Pessoa atualizarPessoa(Long id, Pessoa dados) {
