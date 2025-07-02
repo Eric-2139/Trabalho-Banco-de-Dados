@@ -51,4 +51,12 @@ public class RelacionamentoService {
         relacionamentoRepository.save(noDestino); // garante que destino existe
         relacionamentoRepository.save(noOrigem);
     }
+
+    public Iterable<Relacionamento> listarPessoas() {
+        return relacionamentoRepository.findAll();
+    }
+
+    public Iterable<Relacionamento> listarRelacoes() {
+        return relacionamentoRepository.findAll();
+    }
 }

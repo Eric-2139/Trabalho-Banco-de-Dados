@@ -18,7 +18,8 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
     private final LoggingService loggingService;
     private final RelacionamentoService relacionamentoService;
 
-    public PessoaCommandLineRunner(PessoaService service, LoggingService loggingService, RelacionamentoService relacionamentoService) {
+    public PessoaCommandLineRunner(PessoaService service, LoggingService loggingService,
+            RelacionamentoService relacionamentoService) {
         this.service = service;
         this.loggingService = loggingService;
         this.relacionamentoService = relacionamentoService;
@@ -35,7 +36,9 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
             System.out.println("5 - Buscar pessoa por ID");
             System.out.println("6 - Buscar pessoa por CPF (cache)");
             System.out.println("7 - Mostrar logs");
-            System.out.println("8 - Criar relacionamento");
+            System.out.println("8 - Listar pessoas no Neo4j");
+            System.out.println("9 - Criar relacionamento");
+            System.out.println("10 - Mostrar relacionamentos");
             System.out.println("0 - Sair");
             System.out.print("Opcao: ");
             String opcao = scanner.nextLine();
@@ -77,17 +80,21 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
                 case "5":
                     System.out.print("ID da pessoa: ");
                     service.buscarPorId(Long.parseLong(scanner.nextLine()))
-                        .ifPresentOrElse(System.out::println, () -> System.out.println("Pessoa nao encontrada"));
+                            .ifPresentOrElse(System.out::println, () -> System.out.println("Pessoa nao encontrada"));
                     break;
-                    case "6":
+                case "6":
                     System.out.print("CPF: ");
                     service.buscarPorCpf(scanner.nextLine())
-                        .ifPresentOrElse(System.out::println, () -> System.out.println("Pessoa nao encontrada"));
+                            .ifPresentOrElse(System.out::println, () -> System.out.println("Pessoa nao encontrada"));
                     break;
                 case "7":
                     loggingService.getLogs().forEach(System.out::println);
                     break;
                 case "8":
+                    relacionamentoService.listarPessoas()
+                            .forEach(r -> System.out.println("ID: " + r.getId() + ", Nome: " + r.getNome()));
+                    break;
+                case "9":
                     System.out.print("ID da primeira pessoa: ");
                     Long p1 = Long.parseLong(scanner.nextLine());
                     System.out.print("ID da segunda pessoa: ");
@@ -95,6 +102,12 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
                     System.out.print("Tipo de relacionamento: ");
                     String tipo = scanner.nextLine();
                     relacionamentoService.criarRelacao(p1, p2, tipo);
+                    break;
+                case "10":
+                    relacionamentoService.listarRelacoes().forEach(r -> {
+                        r.getRelacoes().forEach(rel ->
+                                System.out.println(r.getNome() + " --(" + rel.getTipo() + ")-> " + rel.getPessoa().getNome()));
+                    });
                     break;
                 case "0":
                     return;
