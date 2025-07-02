@@ -9,16 +9,19 @@ import org.springframework.stereotype.Component;
 import com.example.trabalhobancodedados.model.Pessoa;
 import com.example.trabalhobancodedados.service.PessoaService;
 import com.example.trabalhobancodedados.service.LoggingService;
+import com.example.trabalhobancodedados.service.RelacionamentoService;
 
 @Component
 public class PessoaCommandLineRunner implements CommandLineRunner {
 
     private final PessoaService service;
     private final LoggingService loggingService;
+    private final RelacionamentoService relacionamentoService;
 
-    public PessoaCommandLineRunner(PessoaService service, LoggingService loggingService) {
+    public PessoaCommandLineRunner(PessoaService service, LoggingService loggingService, RelacionamentoService relacionamentoService) {
         this.service = service;
         this.loggingService = loggingService;
+        this.relacionamentoService = relacionamentoService;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
             System.out.println("5 - Buscar pessoa por ID");
             System.out.println("6 - Buscar pessoa por CPF (cache)");
             System.out.println("7 - Mostrar logs");
+            System.out.println("8 - Criar relacionamento");
             System.out.println("0 - Sair");
             System.out.print("Opcao: ");
             String opcao = scanner.nextLine();
@@ -82,6 +86,15 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
                     break;
                 case "7":
                     loggingService.getLogs().forEach(System.out::println);
+                    break;
+                case "8":
+                    System.out.print("ID da primeira pessoa: ");
+                    Long p1 = Long.parseLong(scanner.nextLine());
+                    System.out.print("ID da segunda pessoa: ");
+                    Long p2 = Long.parseLong(scanner.nextLine());
+                    System.out.print("Tipo de relacionamento: ");
+                    String tipo = scanner.nextLine();
+                    relacionamentoService.criarRelacao(p1, p2, tipo);
                     break;
                 case "0":
                     return;

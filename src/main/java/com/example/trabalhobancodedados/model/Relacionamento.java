@@ -2,7 +2,6 @@ package com.example.trabalhobancodedados.model;
 
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
@@ -18,13 +17,13 @@ import java.util.Set;
 public class Relacionamento {
 
     @Id
-    @GeneratedValue
+
     private Long id;
 
     private String nome;
     private String dataNascimento;
     
-    @Relationship(type = "AMIGO_DE", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "RELACIONAMENTO", direction = Relationship.Direction.OUTGOING)
     @Builder.Default
-    private Set<Relacao> amigos = new HashSet<>();
+    private Set<Relacao> relacoes = new HashSet<>();
 }
