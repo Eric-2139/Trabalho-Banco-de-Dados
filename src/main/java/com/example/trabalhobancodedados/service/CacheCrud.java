@@ -11,13 +11,13 @@ import lombok.*;
 @RequiredArgsConstructor
 
 public class CacheCrud {
-    private final CacheService cacheServiceService;
+    private final CacheService cacheService;
     private final PessoaRepository pessoaRepository; // Injetado para operações de cache
 
     // ---- Métodos limpos e focados na regra de negócio ----
     public Pessoa buscarPorCpf(String cpf) {
-        // 1. Tenta buscar do Redis (via cacheServiceService)
-        Pessoa pessoaModel = cacheServiceService.buscarPessoaPorCpf(cpf);
+        // 1. Tenta buscar do Redis (via cacheService)
+        Pessoa pessoaModel = cacheService.buscarPessoaPorCpf(cpf);
         if (pessoaModel != null) {
             return pessoaModel;
         }
@@ -25,19 +25,19 @@ public class CacheCrud {
         // 2. Busca no banco de dados se não achar no Redis
        pessoaModel = pessoaRepository.findByCpf(cpf);
         if (pessoaModel != null) {
-            // 3. Salva no Redis (via cacheServiceService)
-            cacheServiceService.salvarPessoa(pessoaModel, 1, TimeUnit.HOURS);
+            // 3. Salva no Redis (via cacheService)
+            cacheService.salvarPessoa(pessoaModel, 1, TimeUnit.HOURS);
         }
         return pessoaModel;
     }
 
     public Pessoa salvarPessoaModel(Pessoa pessoaModel) {
         Pessoa PessoaModelSalva = pessoaRepository.save(pessoaModel);
-        cacheServiceService.salvarPessoa(PessoaModelSalva, 1, TimeUnit.HOURS); // Atualiza cache
+        cacheService.salvarPessoa(PessoaModelSalva, 1, TimeUnit.HOURS); // Atualiza cache
         return PessoaModelSalva;
     }
 
     public void deletarPorCpf(String cpf) {
-        cacheServiceService.deletarPessoa(cpf); // Remove do cache
+        cacheService.deletarPessoa(cpf); // Remove do cache
     }
 }
