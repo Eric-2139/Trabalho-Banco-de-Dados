@@ -114,6 +114,8 @@ public class PessoaCommandLineRunner implements CommandLineRunner {
                 default:
                     System.out.println("Opcao invalida");
             }
+            
+        scanner.close();
         }
     }
 }
